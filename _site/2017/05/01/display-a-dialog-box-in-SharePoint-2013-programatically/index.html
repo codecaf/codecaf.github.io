@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Show Dialog box programmatically in SharePoint 2013</title>
+    <meta name="description" content="CodeCaf Limited Blogs.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href=" /favicon.ico ">
+    <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.6/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Lato:400,400italic,700,700italic" />
+    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="canonical" href="http://localhost:4000/2017/05/01/display-a-dialog-box-in-SharePoint-2013-programatically/">
+    <link rel="alternate" type="application/rss+xml" title="CodeCaf Blogs Feed" href="http://localhost:4000 /feed.xml
+        ">
+</head>
+
+<body>
+    <header id="navigation" class="navbar-inverse navbar-fixed-top animated-header">
+        <div class="container">
+            <div class="navbar-header">
+                <!-- responsive nav button -->
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <!-- /responsive nav button -->
+                <!-- logo -->
+                <h1 class="navbar-brand">
+                    <a href="#home">
+                        <img id="logo" src="\images\CodeCaf-White.png"></img>
+                    </a>
+                </h1>
+                <!-- /logo -->
+            </div>
+            <!-- main nav -->
+            <nav class="collapse navbar-collapse navbar-right" role="navigation">
+                <ul id="nav" class="nav navbar-nav">
+                    <li><a href="http://codecaf.nz/#Home">Home</a></li>
+                    <li><a href="http://codecaf.nz/#service">Services</a></li>
+                    <li><a href="http://blog.codecaf.nz/">Blog</a></li>
+                    <li><a href="http://codecaf.nz/#contact">Contact</a></li>
+                </ul>
+            </nav>
+            <!-- /main nav -->
+        </div>
+    </header>
+    <div class="site-content">
+    <div class="inner">
+        <main class="site-main">
+            
+            <article class="post">
+                <header class="entry-header"> 
+                    <div class="entry-header-wrap">
+                        
+                        <div class="post-thumbnail">
+                            <img src="/images/posts//SharePoint-Popups/AllPopups.jpg" alt="Show Dialog box programmatically in SharePoint 2013">
+                        </div><!-- .post-thumbnail -->
+                        
+                        <h1 class="entry-title">Show Dialog box programmatically in SharePoint 2013</h1>
+                    </div><!-- .entry-header-wrap -->
+                    <div class="entry-meta">
+                        by <span class="post-author"><b>Ebby Peter</b></span> on <time class="published" datetime="2017-05-01"><b>May 1, 2017</b></time>
+                    </div><!-- .entry-meta -->
+                </header><!-- .entry-header -->
+                <div class="entry-content">
+                    <h2>What are we trying to achieve</h2>
+
+<p>Programmatically show Dialog box / Popups in SharePoint 2013 with custom code / C#.<br />
+In this post, we will be building two types of dialog boxes.<br />
+In the first type, clicking on the “OK” button refreshes the page. This is useful in situations where we are displaying a process complete message or in similar situations.<br />
+In the second type, clicking on the “OK” button redirects you to a different page. This can be used in situations where a confirmation needs to be taken etc..</p>
+
+<!--more-->
+
+<p>The Result is something like what is shown below.<br />
+<a href="http://localhost:4000/images/posts/SharePoint-Popups/Popup.JPG"><img src="http://localhost:4000/images/posts/SharePoint-Popups/Popup.JPG" alt="Results" /></a></p>
+
+<div class="note tip">
+  <h5>Tip</h5>
+  <p>If you are familiar with how Model popup &amp; dialog box works in SharePoint, then you can skip to the implementation part.</p>
+</div>
+
+<h2>How it is done in SharePoint Product?</h2>
+<p>Before we continue, let’s revisit how the OOB dialog boxes are displayed.<br />
+When a pop up box needs to be displayed, an application page is loaded using an OOB Model Dialog JavaScript.</p>
+
+<p>For example, consider clicking the <code class="highlighter-rouge">New Document</code> button in a Document Library; using Fiddler, we can see that the application page called is<br />
+<em>http://howcanidoit.fourthcoffee.dev</em><strong>/_layouts/15/Upload.aspx?List={4B9CFE85-543E-4B64-9D12-CF7ADA634B16}&amp;RootFolder=&amp;IsDlg=1</strong></p>
+
+<p>The upload page is as follows<br />
+<a href="http://localhost:4000/images/posts/SharePoint-Popups/Upload_Normal.JPG"><img src="http://localhost:4000/images/posts/SharePoint-Popups/Upload_Normal.JPG" alt="Upload Page" /></a></p>
+
+<p>And opening the url gives us this page<br />
+<a href="http://localhost:4000/images/posts/SharePoint-Popups/Upload_AppPage_IsDlg.JPG"><img src="http://localhost:4000/images/posts/SharePoint-Popups/Upload_AppPage_IsDlg.JPG" alt="Upload Page Link" /></a></p>
+
+<p>Similarly Check-In calls the page<br />
+<em>http://howcanidoit.fourthcoffee.dev</em><strong>/_layouts/15/checkin.aspx?List={4B9CFE85-543E-4B64-9D12-CF7ADA634B16}&amp;FileName=%2FDocuments%2FRandom%20Document%2Edocx&amp;IsDlg=1</strong></p>
+
+<p>Well… You get the idea…</p>
+
+<p>The url contains some parameters relevant to the page we are visiting and an <strong><code class="highlighter-rouge">IsDlg=1</code></strong> property.</p>
+
+<p>The JavaScript APIs to display the dialog box are present in <strong><code class="highlighter-rouge">SP.UI.Dialog.Js</code></strong> file and we can use <code class="highlighter-rouge">SP.UI.ModalDialog.showModalDialog(options)</code> to display the dialog box.</p>
+
+<div class="note info">
+  <h5>Note</h5>
+  <p>The corresponding images for Check-in is available in the following links <br />
+    <a href="http://localhost:4000/images/posts/SharePoint-Popups/Checkin_Normal.JPG" alt="Alternate">CheckIn Page</a><br />
+    <a href="http://localhost:4000/images/posts/SharePoint-Popups/Checkin_AppPage_IsDlg.JPG">CheckIn Page Url</a><br />
+    <a href="http://localhost:4000/images/posts/SharePoint-Popups/Checkin_AppPage.JPG">CheckIn Page url without IsDlg</a><br />
+  </p>
+</div>
+
+<h2>The IsDlg Property</h2>
+<p>You would have noticed that opening the url gave a basic page and does not look anything like an application page. This is achieved through the IsDlg=1 parameter passed in the query.<br />
+The <code class="highlighter-rouge">IsDlg=1</code> parameter in the query indicate to SharePoint that the application page is intended to be displayed inside a dialog box. This causes SharePoint to display only the content of the page and hide the SharePoint chrome (Header / footer etc).</p>
+
+<p>So opening the Upload Url without the <code class="highlighter-rouge">IsDlg=1</code> parameter gives the following page<br />
+<a href="http://localhost:4000/images/posts/SharePoint-Popups/Upload_AppPage.JPG"><img src="http://localhost:4000/images/posts/SharePoint-Popups/Upload_AppPage.JPG" alt="Upload Page without IsDlg" /></a><br />
+That looks like a normal application page.<br />
+The Url used was
+<em>http://howcanidoit.fourthcoffee.dev</em><strong>/_layouts/15/Upload.aspx?List={4B9CFE85-543E-4B64-9D12-CF7ADA634B16}&amp;RootFolder=</strong></p>
+
+<h2>Implementation</h2>
+<p>That’s enough of theory… Let us implement it…</p>
+
+<p>There are four parts to the solution.</p>
+
+<ol>
+  <li><strong>Application Page</strong>	- Displays the message that we need to show.</li>
+  <li><strong>Wrapper Class</strong>	- Optionally required to create the correct application page url (with the parameters) and JavaScript function call.</li>
+  <li><strong>JavaScript functions</strong>	- Make sure that the SP.UI.Dialog.Js is loaded and calls the required APIs.</li>
+  <li><strong>Constants Class</strong>	- Optional. Holds all the constants value.</li>
+</ol>
+
+<h3>Application Page</h3>
+
+<p><strong>Aspx Page</strong></p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;asp:Content</span> <span class="na">ID=</span><span class="s">"PageHead"</span> <span class="na">ContentPlaceHolderID=</span><span class="s">"PlaceHolderAdditionalPageHead"</span> <span class="na">runat=</span><span class="s">"server"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;Sharepoint:ScriptLink</span> <span class="na">runat=</span><span class="s">"server"</span> <span class="na">Name=</span><span class="s">"SP.js"</span> <span class="na">Localizable=</span><span class="s">"false"</span>  <span class="na">ID=</span><span class="s">"s1"</span> <span class="na">LoadAfterUI=</span><span class="s">"true"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;Sharepoint:ScriptLink</span> <span class="na">runat=</span><span class="s">"server"</span> <span class="na">Name=</span><span class="s">"SP.Runtime.js"</span> <span class="na">Localizable=</span><span class="s">"false"</span>  <span class="na">ID=</span><span class="s">"s2"</span> <span class="na">LoadAfterUI=</span><span class="s">"true"</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/asp:Content&gt;</span>
+
+<span class="nt">&lt;asp:Content</span> <span class="na">ID=</span><span class="s">"PageTitle"</span> <span class="na">ContentPlaceHolderID=</span><span class="s">"PlaceHolderPageTitle"</span> <span class="na">runat=</span><span class="s">"server"</span><span class="nt">&gt;</span>
+    <span class="err">&lt;</span>%= MessageTitleQueryValue %&gt;
+<span class="nt">&lt;/asp:Content&gt;</span>
+
+<span class="nt">&lt;asp:Content</span> <span class="na">ID=</span><span class="s">"PageTitleInTitleArea"</span> <span class="na">ContentPlaceHolderID=</span><span class="s">"PlaceHolderPageTitleInTitleArea"</span> <span class="na">runat=</span><span class="s">"server"</span> <span class="nt">&gt;</span>
+    <span class="err">&lt;</span>%= MessageTitleQueryValue %&gt;
+<span class="nt">&lt;/asp:Content&gt;</span>
+
+<span class="nt">&lt;asp:Content</span> <span class="na">ID=</span><span class="s">"Main"</span> <span class="na">ContentPlaceHolderID=</span><span class="s">"PlaceHolderMain"</span> <span class="na">runat=</span><span class="s">"server"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">style=</span><span class="s">"min-height: 150px; padding-bottom: 10px;"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;span&gt;</span>
+            <span class="nt">&lt;img</span> <span class="na">style=</span><span class="s">"float: left; width: 50px;"</span> <span class="na">src=</span><span class="s">"&lt;%= MessageImageValue %&gt;"</span> <span class="na">alt=</span><span class="s">"&lt;%= MessageImageText %&gt;"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/span&gt;</span>
+        <span class="nt">&lt;p</span> <span class="na">style=</span><span class="s">"margin-left: 60px; min-height: 100px;"</span><span class="nt">&gt;</span>
+            <span class="err">&lt;</span>%= MessageContentValue %&gt;
+        <span class="nt">&lt;/p&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">style=</span><span class="s">"text-align: right;"</span><span class="nt">&gt;</span>
+        <span class="err">&lt;</span>% if (MessageButtonOptions.Equals("Ok"))
+           { %&gt;
+            <span class="nt">&lt;asp:Button</span> <span class="na">runat=</span><span class="s">"server"</span> <span class="na">ID=</span><span class="s">"OkButton"</span> <span class="na">Text=</span><span class="s">"OK"</span> <span class="na">OnClick=</span><span class="s">"OkButton_OnClick"</span><span class="nt">/&gt;</span>      
+        <span class="err">&lt;</span>% }
+           else if (MessageButtonOptions.Equals("OkCancel"))
+           { %&gt;
+            <span class="nt">&lt;asp:Button</span> <span class="na">runat=</span><span class="s">"server"</span> <span class="na">ID=</span><span class="s">"OkButton1"</span> <span class="na">Text=</span><span class="s">"OK"</span> <span class="na">OnClick=</span><span class="s">"OkButton_OnClick"</span><span class="nt">/&gt;</span> <span class="ni">&amp;nbsp;&amp;nbsp;</span>
+            <span class="nt">&lt;asp:Button</span> <span class="na">runat=</span><span class="s">"server"</span> <span class="na">ID=</span><span class="s">"CancelButton"</span> <span class="na">Text=</span><span class="s">"Cancel"</span> <span class="na">OnClick=</span><span class="s">"CancelButton_OnClick"</span><span class="nt">/&gt;</span>      
+        <span class="err">&lt;</span>% } %&gt;
+        
+    <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/asp:Content&gt;</span></code></pre></figure>
+
+<p><strong>Aspx/C# Code Behind</strong></p>
+
+<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Linq</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.SharePoint.WebControls</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">SharePointPopups.Common</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">SharePointPopups.Layouts.SharePointPopups</span>
+<span class="p">{</span>
+    <span class="c1">/// &lt;summary&gt;
+</span>    <span class="c1">/// Show Message Application Page
+</span>    <span class="c1">/// &lt;/summary&gt;
+</span>    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">ShowMessage</span> <span class="p">:</span> <span class="n">LayoutsPageBase</span>
+    <span class="p">{</span>
+        <span class="c1">//Constants      
+</span>        <span class="k">public</span> <span class="kt">string</span> <span class="n">MessageButtonOptions</span> <span class="p">=</span> <span class="kt">string</span><span class="p">.</span><span class="n">Empty</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">MessageContentValue</span> <span class="p">=</span> <span class="kt">string</span><span class="p">.</span><span class="n">Empty</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">MessageImageText</span> <span class="p">=</span> <span class="kt">string</span><span class="p">.</span><span class="n">Empty</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">MessageImageValue</span> <span class="p">=</span> <span class="kt">string</span><span class="p">.</span><span class="n">Empty</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">MessageTitleQueryValue</span> <span class="p">=</span> <span class="kt">string</span><span class="p">.</span><span class="n">Empty</span><span class="p">;</span>
+
+        <span class="k">protected</span> <span class="k">void</span> <span class="nf">Page_Load</span><span class="p">(</span><span class="kt">object</span> <span class="n">sender</span><span class="p">,</span> <span class="n">EventArgs</span> <span class="n">e</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">Request</span><span class="p">.</span><span class="n">QueryString</span><span class="p">.</span><span class="n">AllKeys</span><span class="p">.</span><span class="nf">Contains</span><span class="p">(</span><span class="n">Constants</span><span class="p">.</span><span class="n">MessageContentQueryName</span><span class="p">))</span>
+            <span class="p">{</span>
+                <span class="n">MessageContentValue</span> <span class="p">=</span> <span class="n">Request</span><span class="p">.</span><span class="n">QueryString</span><span class="p">[</span><span class="n">Constants</span><span class="p">.</span><span class="n">MessageContentQueryName</span><span class="p">];</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">Request</span><span class="p">.</span><span class="n">QueryString</span><span class="p">.</span><span class="n">AllKeys</span><span class="p">.</span><span class="nf">Contains</span><span class="p">(</span><span class="n">Constants</span><span class="p">.</span><span class="n">MessageTitleQueryName</span><span class="p">))</span>
+            <span class="p">{</span>
+                <span class="n">MessageTitleQueryValue</span> <span class="p">=</span> <span class="n">Request</span><span class="p">.</span><span class="n">QueryString</span><span class="p">[</span><span class="n">Constants</span><span class="p">.</span><span class="n">MessageTitleQueryName</span><span class="p">];</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">Request</span><span class="p">.</span><span class="n">QueryString</span><span class="p">.</span><span class="n">AllKeys</span><span class="p">.</span><span class="nf">Contains</span><span class="p">(</span><span class="n">Constants</span><span class="p">.</span><span class="n">MessageTypeQueryName</span><span class="p">))</span>
+            <span class="p">{</span>
+                <span class="n">MessageImageText</span> <span class="p">=</span> <span class="n">Request</span><span class="p">.</span><span class="n">QueryString</span><span class="p">[</span><span class="n">Constants</span><span class="p">.</span><span class="n">MessageTypeQueryName</span><span class="p">];</span>
+                <span class="k">switch</span> <span class="p">(</span><span class="n">Request</span><span class="p">.</span><span class="n">QueryString</span><span class="p">[</span><span class="n">Constants</span><span class="p">.</span><span class="n">MessageTypeQueryName</span><span class="p">].</span><span class="nf">ToUpperInvariant</span><span class="p">())</span>
+                <span class="p">{</span>
+                    <span class="k">case</span> <span class="s">"ERROR"</span><span class="p">:</span>
+                        <span class="n">MessageImageValue</span> <span class="p">=</span> <span class="n">Constants</span><span class="p">.</span><span class="n">ErrorImage</span><span class="p">;</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="k">case</span> <span class="s">"WARNING"</span><span class="p">:</span>
+                        <span class="n">MessageImageValue</span> <span class="p">=</span> <span class="n">Constants</span><span class="p">.</span><span class="n">WarnImage</span><span class="p">;</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="k">case</span> <span class="s">"INFORMATION"</span><span class="p">:</span>
+                        <span class="n">MessageImageValue</span> <span class="p">=</span> <span class="n">Constants</span><span class="p">.</span><span class="n">InfoImage</span><span class="p">;</span>
+                        <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">Request</span><span class="p">.</span><span class="n">QueryString</span><span class="p">.</span><span class="n">AllKeys</span><span class="p">.</span><span class="nf">Contains</span><span class="p">(</span><span class="n">Constants</span><span class="p">.</span><span class="n">MessageOptionsQueryName</span><span class="p">))</span>
+            <span class="p">{</span>
+                <span class="n">MessageButtonOptions</span> <span class="p">=</span> <span class="n">Request</span><span class="p">.</span><span class="n">QueryString</span><span class="p">[</span><span class="n">Constants</span><span class="p">.</span><span class="n">MessageOptionsQueryName</span><span class="p">];</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">protected</span> <span class="k">void</span> <span class="nf">OkButton_OnClick</span><span class="p">(</span><span class="kt">object</span> <span class="n">sender</span><span class="p">,</span> <span class="n">EventArgs</span> <span class="n">e</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">Page</span><span class="p">.</span><span class="n">ClientScript</span><span class="p">.</span><span class="nf">RegisterStartupScript</span><span class="p">(</span><span class="nf">GetType</span><span class="p">(),</span> <span class="s">"PopupScript"</span><span class="p">,</span>
+                <span class="s">"SP.UI.ModalDialog.commonModalDialogClose(SP.UI.DialogResult.OK, 'OK');"</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">protected</span> <span class="k">void</span> <span class="nf">CancelButton_OnClick</span><span class="p">(</span><span class="kt">object</span> <span class="n">sender</span><span class="p">,</span> <span class="n">EventArgs</span> <span class="n">e</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">Page</span><span class="p">.</span><span class="n">ClientScript</span><span class="p">.</span><span class="nf">RegisterStartupScript</span><span class="p">(</span><span class="nf">GetType</span><span class="p">(),</span> <span class="s">"PopupScript"</span><span class="p">,</span>
+                <span class="s">"SP.UI.ModalDialog.commonModalDialogClose(SP.UI.DialogResult.cancel, 'Cancel');"</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<h4>Wrapper Class</h4>
+
+<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="k">namespace</span> <span class="nn">SharePointPopups.Common</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">PopupOperations</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="kt">string</span> <span class="nf">ShowPopup</span><span class="p">(</span><span class="n">Constants</span><span class="p">.</span><span class="n">PopupType</span> <span class="n">messageType</span><span class="p">,</span> <span class="kt">string</span> <span class="n">title</span><span class="p">,</span> <span class="kt">string</span> <span class="n">message</span><span class="p">,</span>
+            <span class="n">Constants</span><span class="p">.</span><span class="n">PopupButtons</span> <span class="n">buttons</span><span class="p">,</span> <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">refreshPage</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">const</span> <span class="kt">string</span> <span class="n">pageUrlFormat</span> <span class="p">=</span> <span class="s">"{0}?Type={1}&amp;Title={2}&amp;Message={3}&amp;Options={4}&amp;isDlg=1"</span><span class="p">;</span>
+            <span class="k">const</span> <span class="kt">string</span> <span class="n">dialogStringFormat</span> <span class="p">=</span> <span class="s">"openInDialog({0}, {1}, false, true, {2},'{3}');"</span><span class="p">;</span>
+
+            <span class="kt">string</span> <span class="n">pageUrl</span> <span class="p">=</span> <span class="kt">string</span><span class="p">.</span><span class="nf">Format</span><span class="p">(</span><span class="n">pageUrlFormat</span><span class="p">,</span> <span class="n">Constants</span><span class="p">.</span><span class="n">ShowMessagePage</span><span class="p">,</span> <span class="n">messageType</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span>
+                <span class="n">buttons</span><span class="p">);</span>
+            <span class="kt">string</span> <span class="n">dialogString</span> <span class="p">=</span> <span class="kt">string</span><span class="p">.</span><span class="nf">Format</span><span class="p">(</span><span class="n">dialogStringFormat</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">refreshPage</span><span class="p">.</span><span class="nf">ToString</span><span class="p">().</span><span class="nf">ToLower</span><span class="p">(),</span>
+                <span class="n">pageUrl</span><span class="p">);</span>
+
+            <span class="k">return</span> <span class="n">dialogString</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">static</span> <span class="kt">string</span> <span class="nf">ShowPopupAndRedirect</span><span class="p">(</span><span class="n">Constants</span><span class="p">.</span><span class="n">PopupType</span> <span class="n">messageType</span><span class="p">,</span> <span class="kt">string</span> <span class="n">title</span><span class="p">,</span> <span class="kt">string</span> <span class="n">message</span><span class="p">,</span>
+            <span class="n">Constants</span><span class="p">.</span><span class="n">PopupButtons</span> <span class="n">buttons</span><span class="p">,</span> <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="p">,</span> <span class="kt">string</span> <span class="n">redirectUrl</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">const</span> <span class="kt">string</span> <span class="n">pageUrlFormat</span> <span class="p">=</span> <span class="s">"{0}?Type={1}&amp;Title={2}&amp;Message={3}&amp;Options={4}&amp;isDlg=1"</span><span class="p">;</span>
+            <span class="k">const</span> <span class="kt">string</span> <span class="n">dialogStringFormat</span> <span class="p">=</span> <span class="s">"openInDialogAndRedirect({0}, {1}, false, true, '{2}','{3}');"</span><span class="p">;</span>
+
+            <span class="kt">string</span> <span class="n">pageUrl</span> <span class="p">=</span> <span class="kt">string</span><span class="p">.</span><span class="nf">Format</span><span class="p">(</span><span class="n">pageUrlFormat</span><span class="p">,</span> <span class="n">Constants</span><span class="p">.</span><span class="n">ShowMessagePage</span><span class="p">,</span> <span class="n">messageType</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span>
+                <span class="n">buttons</span><span class="p">);</span>
+            <span class="kt">string</span> <span class="n">dialogString</span> <span class="p">=</span> <span class="kt">string</span><span class="p">.</span><span class="nf">Format</span><span class="p">(</span><span class="n">dialogStringFormat</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">pageUrl</span><span class="p">,</span> <span class="n">redirectUrl</span><span class="p">);</span>
+
+            <span class="k">return</span> <span class="n">dialogString</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<h4>JavaScript Functions</h4>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">openInDialog</span><span class="p">(</span><span class="nx">dlgWidth</span><span class="p">,</span> <span class="nx">dlgHeight</span><span class="p">,</span> <span class="nx">dlgAllowMaximize</span><span class="p">,</span> <span class="nx">dlgShowClose</span><span class="p">,</span> <span class="nx">needCallbackFunction</span><span class="p">,</span> <span class="nx">pageUrl</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="na">url</span><span class="p">:</span> <span class="nx">pageUrl</span><span class="p">,</span>
+        <span class="na">width</span><span class="p">:</span> <span class="nx">dlgWidth</span><span class="p">,</span>
+        <span class="na">height</span><span class="p">:</span> <span class="nx">dlgHeight</span><span class="p">,</span>
+        <span class="na">allowMaximize</span><span class="p">:</span> <span class="nx">dlgAllowMaximize</span><span class="p">,</span>
+        <span class="na">showClose</span><span class="p">:</span> <span class="nx">dlgShowClose</span>
+    <span class="p">};</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">needCallbackFunction</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">options</span><span class="p">.</span><span class="nx">dialogReturnValueCallback</span> <span class="o">=</span> <span class="nb">Function</span><span class="p">.</span><span class="nx">createDelegate</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">CloseDialogCallback</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="nx">SP</span><span class="p">.</span><span class="nx">SOD</span><span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="s1">'sp.ui.dialog.js'</span><span class="p">,</span> <span class="s1">'SP.UI.ModalDialog.showModalDialog'</span><span class="p">,</span> <span class="nx">options</span><span class="p">);</span>
+<span class="p">}</span>
+
+
+<span class="kd">var</span> <span class="nx">redirectUrlValue</span> <span class="o">=</span> <span class="s2">""</span><span class="p">;</span>
+
+<span class="kd">function</span> <span class="nx">openInDialogAndRedirect</span><span class="p">(</span><span class="nx">dlgWidth</span><span class="p">,</span> <span class="nx">dlgHeight</span><span class="p">,</span> <span class="nx">dlgAllowMaximize</span><span class="p">,</span> <span class="nx">dlgShowClose</span><span class="p">,</span> <span class="nx">pageUrl</span><span class="p">,</span> <span class="nx">redirectUrl</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="na">url</span><span class="p">:</span> <span class="nx">pageUrl</span><span class="p">,</span>
+        <span class="na">width</span><span class="p">:</span> <span class="nx">dlgWidth</span><span class="p">,</span>
+        <span class="na">height</span><span class="p">:</span> <span class="nx">dlgHeight</span><span class="p">,</span>
+        <span class="na">allowMaximize</span><span class="p">:</span> <span class="nx">dlgAllowMaximize</span><span class="p">,</span>
+        <span class="na">showClose</span><span class="p">:</span> <span class="nx">dlgShowClose</span>
+    <span class="p">};</span>
+    <span class="nx">redirectUrlValue</span> <span class="o">=</span> <span class="nx">redirectUrl</span><span class="p">;</span>
+    <span class="nx">options</span><span class="p">.</span><span class="nx">dialogReturnValueCallback</span> <span class="o">=</span> <span class="nb">Function</span><span class="p">.</span><span class="nx">createDelegate</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">CloseDialogAndRedirectCallback</span><span class="p">);</span>
+
+    <span class="nx">SP</span><span class="p">.</span><span class="nx">SOD</span><span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="s1">'sp.ui.dialog.js'</span><span class="p">,</span> <span class="s1">'SP.UI.ModalDialog.showModalDialog'</span><span class="p">,</span> <span class="nx">options</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">CloseDialogCallback</span><span class="p">(</span><span class="nx">dialogResult</span><span class="p">,</span> <span class="nx">returnValue</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">dialogResult</span> <span class="o">==</span> <span class="nx">SP</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">DialogResult</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// refresh parent page</span>
+        <span class="nx">SP</span><span class="p">.</span><span class="nx">SOD</span><span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="s1">'sp.ui.dialog.js'</span><span class="p">,</span> <span class="s1">'SP.UI.ModalDialog.RefreshPage'</span><span class="p">,</span> <span class="nx">SP</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">DialogResult</span><span class="p">.</span><span class="nx">OK</span><span class="p">);</span>
+
+    <span class="p">}</span>
+    <span class="c1">// if user click on Close or Cancel</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">dialogResult</span> <span class="o">==</span> <span class="nx">SP</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">DialogResult</span><span class="p">.</span><span class="nx">cancel</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// Do Nothing or add any logic you want </span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="c1">//alert("else " + dialogResult);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">CloseDialogAndRedirectCallback</span><span class="p">(</span><span class="nx">dialogResult</span><span class="p">,</span> <span class="nx">returnValue</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">dialogResult</span> <span class="o">==</span> <span class="nx">SP</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">DialogResult</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// refresh parent page</span>
+        <span class="nx">SP</span><span class="p">.</span><span class="nx">SOD</span><span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="s1">'sp.ui.dialog.js'</span><span class="p">,</span> <span class="s1">'SP.UI.ModalDialog.RefreshPage'</span><span class="p">,</span> <span class="nx">SP</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">DialogResult</span><span class="p">.</span><span class="nx">OK</span><span class="p">);</span>
+        <span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">href</span> <span class="o">=</span> <span class="nx">redirectUrlValue</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c1">// if user click on Close or Cancel</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">dialogResult</span> <span class="o">==</span> <span class="nx">SP</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">DialogResult</span><span class="p">.</span><span class="nx">cancel</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// Do Nothing or add any logic you want </span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="c1">//alert("else " + dialogResult);</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<h4>Constants Class</h4>
+
+<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="k">namespace</span> <span class="nn">SharePointPopups.Common</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">Constants</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">enum</span> <span class="n">PopupButtons</span>
+        <span class="p">{</span>
+            <span class="n">Ok</span><span class="p">,</span>
+            <span class="n">OkCancel</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">enum</span> <span class="n">PopupType</span>
+        <span class="p">{</span>
+            <span class="n">Information</span><span class="p">,</span>
+            <span class="n">Warning</span><span class="p">,</span>
+            <span class="n">Error</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">const</span> <span class="kt">string</span> <span class="n">ErrorImage</span> <span class="p">=</span> <span class="s">"/Style%20Library/Custom%20Images/Error.png"</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">const</span> <span class="kt">string</span> <span class="n">WarnImage</span> <span class="p">=</span> <span class="s">"/Style%20Library/Custom%20Images/Warn.png"</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">const</span> <span class="kt">string</span> <span class="n">InfoImage</span> <span class="p">=</span> <span class="s">"/Style%20Library/Custom%20Images/Info.png"</span><span class="p">;</span>
+
+        <span class="k">public</span> <span class="k">const</span> <span class="kt">string</span> <span class="n">MessageTitleQueryName</span> <span class="p">=</span> <span class="s">"Title"</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">const</span> <span class="kt">string</span> <span class="n">MessageContentQueryName</span> <span class="p">=</span> <span class="s">"Message"</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">const</span> <span class="kt">string</span> <span class="n">MessageTypeQueryName</span> <span class="p">=</span> <span class="s">"Type"</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">const</span> <span class="kt">string</span> <span class="n">MessageOptionsQueryName</span> <span class="p">=</span> <span class="s">"Options"</span><span class="p">;</span>
+
+        <span class="k">public</span> <span class="k">const</span> <span class="kt">string</span> <span class="n">ShowMessagePage</span> <span class="p">=</span> <span class="s">"/_layouts/15/SharePointPopups/ShowMessage.aspx"</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<h2>Usage</h2>
+
+<p>This is how we call the Dialog box from C#.
+What we are actually doing here is calling the JavaScript Function using <code class="highlighter-rouge">Page.ClientScript.RegisterStartupScript</code>.<br />
+<code class="highlighter-rouge">PopupOperations.ShowPopup</code> &amp; <code class="highlighter-rouge">PopupOperations.ShowPopupAndRedirect</code> creates the required function call with the appropriate urls.<br />
+The last parameter in the <code class="highlighter-rouge">PopupOperations.ShowPopup</code> defines if the page needs to be refreshed.<br />
+Similarly the last parameter in the <code class="highlighter-rouge">PopupOperations.ShowPopupAndRedirect</code> defines the page to which the user needs to be redirected on pressing “OK”</p>
+
+<h3>Show Popup</h3>
+
+<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="n">Page</span><span class="p">.</span><span class="n">ClientScript</span><span class="p">.</span><span class="nf">RegisterStartupScript</span><span class="p">(</span><span class="k">typeof</span> <span class="p">(</span><span class="n">Page</span><span class="p">),</span> <span class="s">"Popout Script"</span><span class="p">,</span>
+                <span class="n">PopupOperations</span><span class="p">.</span><span class="nf">ShowPopup</span><span class="p">(</span><span class="n">Constants</span><span class="p">.</span><span class="n">PopupType</span><span class="p">.</span><span class="n">Information</span><span class="p">,</span>
+                    <span class="s">"Information Message"</span><span class="p">,</span>
+                    <span class="s">"This is a popup with OK Button. Clicking OK Will refresh the page."</span><span class="p">,</span>
+                    <span class="n">Constants</span><span class="p">.</span><span class="n">PopupButtons</span><span class="p">.</span><span class="n">Ok</span><span class="p">,</span>
+                    <span class="m">500</span><span class="p">,</span> <span class="m">210</span><span class="p">,</span> <span class="k">true</span><span class="p">)</span>
+                <span class="p">,</span> <span class="k">true</span><span class="p">);</span></code></pre></figure>
+
+<h3>Show Popup &amp; Redirect</h3>
+
+<figure class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="n">Page</span><span class="p">.</span><span class="n">ClientScript</span><span class="p">.</span><span class="nf">RegisterStartupScript</span><span class="p">(</span><span class="k">typeof</span> <span class="p">(</span><span class="n">Page</span><span class="p">),</span> <span class="s">"Popout Script"</span><span class="p">,</span>
+                <span class="n">PopupOperations</span><span class="p">.</span><span class="nf">ShowPopupAndRedirect</span><span class="p">(</span><span class="n">Constants</span><span class="p">.</span><span class="n">PopupType</span><span class="p">.</span><span class="n">Error</span><span class="p">,</span>
+                    <span class="s">"Error Message"</span><span class="p">,</span>
+                    <span class="s">"This is a popup with OK Button. Clicking OK will redirect to the settings page."</span><span class="p">,</span>
+                    <span class="n">Constants</span><span class="p">.</span><span class="n">PopupButtons</span><span class="p">.</span><span class="n">Ok</span><span class="p">,</span>
+                    <span class="m">500</span><span class="p">,</span> <span class="m">210</span><span class="p">,</span>
+                    <span class="s">"/_layouts/15/settings.aspx"</span><span class="p">)</span>
+                <span class="p">,</span> <span class="k">true</span><span class="p">);</span></code></pre></figure>
+
+<div class="note download">
+  <h5>Downloads</h5>
+  <p>The complete source code that demonstrates the concept and all the code that is described in this post is available at GitHub in the following address <br />
+    <a href="https://github.com/ebbypeter/SharePointPopups.git" alt="Sample Source Code">SharePoint Popups</a><br />
+  </p>
+</div>
+
+<h2>Solution Description</h2>
+<p>The solution structure and the webpart is shown below.<br />
+Once the solution is deployed, the webpart can be found in the WebParts Gallery under the <code class="highlighter-rouge">HowCanIDoIt</code> category.</p>
+
+<p class="pull-right"><a href="http://localhost:4000/images/posts/SharePoint-Popups/SolutionStructure.JPG"><img src="http://localhost:4000/images/posts/SharePoint-Popups/SolutionStructure.JPG" alt="Solution Structure" /></a></p>
+
+<p><a href="http://localhost:4000/images/posts/SharePoint-Popups/Webpart.JPG"><img src="http://localhost:4000/images/posts/SharePoint-Popups/Webpart.JPG" alt="Solution Structure" /></a></p>
+
+<div class="note download">
+  <h5>Downloads</h5>
+  <p>The complete source code that was used in this post can be found at <br />
+    <a href="https://github.com/ebbypeter/SharePointPopups.git" alt="Sample Source Code">SharePoint Popups</a><br />
+  </p>
+</div>
+
+<hr />
+<p>Liked this post or have feedbacks / corrections for me? Let me know in the comments below.</p>
+
+                </div><!-- .entry-content -->
+                <footer class="entry-footer">
+                    <div class="share-post">
+                        <span>Share</span>
+                        <a class="fa-twitter" target="_blank" href="https://twitter.com/intent/tweet?text=Show%20Dialog%20box%20programmatically%20in%20SharePoint%202013&amp;url=http://localhost:4000/2017/05/01/display-a-dialog-box-in-SharePoint-2013-programatically/"><span class="screen-reader-text">Twitter</span></a>
+                        <a class="fa-facebook" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:4000/2017/05/01/display-a-dialog-box-in-SharePoint-2013-programatically/&amp;t=Show%20Dialog%20box%20programmatically%20in%20SharePoint%202013"><span class="screen-reader-text">Facebook</span></a>
+                        <a class="fa-google-plus" target="_blank" href="http://plus.google.com/share?url=http://localhost:4000/2017/05/01/display-a-dialog-box-in-SharePoint-2013-programatically/"><span class="screen-reader-text">Google+</span></a>
+                    </div><!-- .share-post -->
+                    
+                    <div class="tag-links">
+                        Tags: <a href="/tags/index.html#SharePoint" title="Pages tagged SharePoint" rel="tag">SharePoint</a><a href="/tags/index.html#SharePoint+2013" title="Pages tagged SharePoint 2013" rel="tag">SharePoint 2013</a><a href="/tags/index.html#C%23" title="Pages tagged C#" rel="tag">C#</a><a href="/tags/index.html#JavaScript" title="Pages tagged JavaScript" rel="tag">JavaScript</a>
+                    </div>
+                    
+                </footer><!-- .entry-footer -->
+            </article><!-- .post -->
+            <div class="author-box">
+                <div class="author-info">
+                    <div class="author-avatar" style="background-image: url(/images/ebby.png)">
+                        <span class="screen-reader-text">Ebby Peter's Picture</span>
+                    </div>
+                    <div class="author-details">
+                        <h2 class="author-title">About Ebby Peter</h2>
+                        <p class="author-bio">Ebby's Bio comes here...</p>
+                        <span class="author-location">
+                            <i class="fa-map-marker" aria-hidden="true"></i> Wellington, New Zealand
+                        </span>
+                        <!--<span class="author-website"><i class="fa-chain" aria-hidden="true"></i> <a href="" target="_blank"> </a></span>-->
+                    </div>
+                    <!-- .author-details -->
+                </div>
+                <!-- .author-info -->
+            </div>
+            <!-- .author-box -->
+            <nav class="post-navigation">
+                <h2 class="screen-reader-text">Post navigation</h2>
+                
+                
+            </nav><!-- .post-navigation -->
+            
+                <div class="comments-area">
+    <div class="comments-inner">
+        <h2 class="comments-title">Comments</h2>
+        <div id="disqus_thread"></div>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus</a>.</noscript>
+    </div><!-- .comments-inner -->
+</div><!-- .comments-area -->
+
+<script type="text/javascript">
+    var disqus_shortname = 'blog-codecaf-nz';
+    var disqus_developer = 0;
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+</script>
+
+            
+        </main><!-- .site-main -->
+        <aside class="sidebar">
+
+    
+
+    
+
+    
+    <section class="widget widget-text">
+        <p><a href="http://codecaf.nz" target="_blank"><img src="/images/banner.jpg" alt="Optional Banner Ad" /></a></p>
+    </section><!-- .widget-text-->
+    
+
+    <section class="widget widget-recent-posts">
+        <h2 class="widget-title">Latest Posts</h2>
+        <ul class="recent-posts">
+            
+            <li class="recent-item"><a href="/2017/05/01/display-a-dialog-box-in-SharePoint-2013-programatically/">Show Dialog box programmatically in SharePoint 2013</a> <span>May 1, 2017</span></li>
+            
+        </ul><!-- .recent-posts -->
+    </section><!-- .widget-recent-posts -->
+
+    <!--Create a sorted array of tags-->
+    
+    
+    <section class="widget widget-tags">
+        <h2 class="widget-title">Tags</h2>
+        <div class="tagcloud">
+            
+            <a href="/tags/#C%23">C#</a>
+            
+            <a href="/tags/#JavaScript">JavaScript</a>
+            
+            <a href="/tags/#SharePoint">SharePoint</a>
+            
+            <a href="/tags/#SharePoint+2013">SharePoint 2013</a>
+            
+        </div><!-- .tagcloud -->
+    </section><!-- .widget -->
+
+</aside><!-- .sidebar -->
+
+    </div><!-- .inner -->
+</div><!-- .site-content -->
+ <footer class="site-footer">
+    <div class="inner">
+        <div class="social-links">
+            
+            
+            
+            
+            <a href="https://github.com/username" class="fa-github-alt square fill-horizontal"><span class="screen-reader-text">GitHub</span></a>
+            
+            
+            
+            
+            
+            
+            
+            <a href="https://www.linkedin.com/in/username" class="fa-linkedin square fill-horizontal"><span class="screen-reader-text">LinkedIn</span></a>
+            
+            <a class="fa-feed square fill-horizontal" href="/feed.xml"><span class="screen-reader-text">RSS</span></a>
+        </div><!-- .social-links -->
+        <div class="site-info">
+            &copy; <a href="/">CodeCaf Blogs</a> all rights reserved. <br />
+            <a href="#top" id="top-link" class="fa-chevron-up top-link square fill-horizontal"><span class="screen-reader-text">Back to the top</span></a>
+        </div><!-- .site-info -->
+    </div><!-- .inner -->
+</footer><!-- .site-footer -->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="/js/plugins.js"></script>
+    <script type="text/javascript" src="/js/custom.js"></script>
+</body>
+
+</html>
