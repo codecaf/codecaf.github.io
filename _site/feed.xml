@@ -5,8 +5,8 @@
         <description>CodeCaf Limited Blogs.</description>
         <link>http://localhost:4000/</link>
         <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Wed, 10 May 2017 18:49:45 +1200</pubDate>
-        <lastBuildDate>Wed, 10 May 2017 18:49:45 +1200</lastBuildDate>
+        <pubDate>Wed, 10 May 2017 19:19:46 +1200</pubDate>
+        <lastBuildDate>Wed, 10 May 2017 19:19:46 +1200</lastBuildDate>
         <generator>Jekyll v3.4.3</generator>
         
             <item>
@@ -21,7 +21,7 @@ In the second type, clicking on the “OK” button redirects you to a different
 &lt;!--more--&gt;
 
 &lt;p&gt;The Result is something like what is shown below.&lt;br /&gt;
-&lt;a href=&quot;/images/posts/SharePoint-Popups/Popup.JPG&quot;&gt;&lt;img src=&quot;/images/posts/SharePoint-Popups/Popup.JPG&quot; alt=&quot;Results&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;a href=&quot;/images/posts/SharePoint-Popups/Popup.jpg&quot;&gt;&lt;img src=&quot;/images/posts/SharePoint-Popups/Popup.jpg&quot; alt=&quot;Results&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
 
 &lt;div class=&quot;note tip&quot;&gt;
   &lt;h5&gt;Tip&lt;/h5&gt;
@@ -36,10 +36,10 @@ When a pop up box needs to be displayed, an application page is loaded using an 
 &lt;em&gt;http://howcanidoit.fourthcoffee.dev&lt;/em&gt;&lt;strong&gt;/_layouts/15/Upload.aspx?List={4B9CFE85-543E-4B64-9D12-CF7ADA634B16}&amp;amp;RootFolder=&amp;amp;IsDlg=1&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;The upload page is as follows&lt;br /&gt;
-&lt;a href=&quot;/images/posts/SharePoint-Popups/Upload_Normal.JPG&quot;&gt;&lt;img src=&quot;/images/posts/SharePoint-Popups/Upload_Normal.JPG&quot; alt=&quot;Upload Page&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;a href=&quot;/images/posts/SharePoint-Popups/Upload_Normal.jpg&quot;&gt;&lt;img src=&quot;/images/posts/SharePoint-Popups/Upload_Normal.jpg&quot; alt=&quot;Upload Page&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;And opening the url gives us this page&lt;br /&gt;
-&lt;a href=&quot;/images/posts/SharePoint-Popups/Upload_AppPage_IsDlg.JPG&quot;&gt;&lt;img src=&quot;/images/posts/SharePoint-Popups/Upload_AppPage_IsDlg.JPG&quot; alt=&quot;Upload Page Link&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;a href=&quot;/images/posts/SharePoint-Popups/Upload_AppPage_IsDlg.jpg&quot;&gt;&lt;img src=&quot;/images/posts/SharePoint-Popups/Upload_AppPage_IsDlg.jpg&quot; alt=&quot;Upload Page Link&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;Similarly Check-In calls the page&lt;br /&gt;
 &lt;em&gt;http://howcanidoit.fourthcoffee.dev&lt;/em&gt;&lt;strong&gt;/_layouts/15/checkin.aspx?List={4B9CFE85-543E-4B64-9D12-CF7ADA634B16}&amp;amp;FileName=%2FDocuments%2FRandom%20Document%2Edocx&amp;amp;IsDlg=1&lt;/strong&gt;&lt;/p&gt;
@@ -53,9 +53,9 @@ When a pop up box needs to be displayed, an application page is loaded using an 
 &lt;div class=&quot;note info&quot;&gt;
   &lt;h5&gt;Note&lt;/h5&gt;
   &lt;p&gt;The corresponding images for Check-in is available in the following links &lt;br /&gt;
-    &lt;a href=&quot;http://localhost:4000/images/posts/SharePoint-Popups/Checkin_Normal.JPG&quot; alt=&quot;Alternate&quot;&gt;CheckIn Page&lt;/a&gt;&lt;br /&gt;
-    &lt;a href=&quot;http://localhost:4000/images/posts/SharePoint-Popups/Checkin_AppPage_IsDlg.JPG&quot;&gt;CheckIn Page Url&lt;/a&gt;&lt;br /&gt;
-    &lt;a href=&quot;http://localhost:4000/images/posts/SharePoint-Popups/Checkin_AppPage.JPG&quot;&gt;CheckIn Page url without IsDlg&lt;/a&gt;&lt;br /&gt;
+    &lt;a href=&quot;/images/posts/SharePoint-Popups/Checkin_Normal.jpg&quot; alt=&quot;Alternate&quot;&gt;CheckIn Page&lt;/a&gt;&lt;br /&gt;
+    &lt;a href=&quot;/images/posts/SharePoint-Popups/Checkin_AppPage_IsDlg.jpg&quot;&gt;CheckIn Page Url&lt;/a&gt;&lt;br /&gt;
+    &lt;a href=&quot;/images/posts/SharePoint-Popups/Checkin_AppPage.jpg&quot;&gt;CheckIn Page url without IsDlg&lt;/a&gt;&lt;br /&gt;
   &lt;/p&gt;
 &lt;/div&gt;
 
@@ -64,7 +64,7 @@ When a pop up box needs to be displayed, an application page is loaded using an 
 The &lt;code class=&quot;highlighter-rouge&quot;&gt;IsDlg=1&lt;/code&gt; parameter in the query indicate to SharePoint that the application page is intended to be displayed inside a dialog box. This causes SharePoint to display only the content of the page and hide the SharePoint chrome (Header / footer etc).&lt;/p&gt;
 
 &lt;p&gt;So opening the Upload Url without the &lt;code class=&quot;highlighter-rouge&quot;&gt;IsDlg=1&lt;/code&gt; parameter gives the following page&lt;br /&gt;
-&lt;a href=&quot;http://localhost:4000/images/posts/SharePoint-Popups/Upload_AppPage.JPG&quot;&gt;&lt;img src=&quot;http://localhost:4000/images/posts/SharePoint-Popups/Upload_AppPage.JPG&quot; alt=&quot;Upload Page without IsDlg&quot; /&gt;&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;/images/posts/SharePoint-Popups/Upload_AppPage.jpg&quot;&gt;&lt;img src=&quot;/images/posts/SharePoint-Popups/Upload_AppPage.jpg&quot; alt=&quot;Upload Page without IsDlg&quot; /&gt;&lt;/a&gt;&lt;br /&gt;
 That looks like a normal application page.&lt;br /&gt;
 The Url used was
 &lt;em&gt;http://howcanidoit.fourthcoffee.dev&lt;/em&gt;&lt;strong&gt;/_layouts/15/Upload.aspx?List={4B9CFE85-543E-4B64-9D12-CF7ADA634B16}&amp;amp;RootFolder=&lt;/strong&gt;&lt;/p&gt;
@@ -354,9 +354,9 @@ Similarly the last parameter in the &lt;code class=&quot;highlighter-rouge&quot;
 &lt;p&gt;The solution structure and the webpart is shown below.&lt;br /&gt;
 Once the solution is deployed, the webpart can be found in the WebParts Gallery under the &lt;code class=&quot;highlighter-rouge&quot;&gt;HowCanIDoIt&lt;/code&gt; category.&lt;/p&gt;
 
-&lt;p class=&quot;pull-right&quot;&gt;&lt;a href=&quot;http://localhost:4000/images/posts/SharePoint-Popups/SolutionStructure.JPG&quot;&gt;&lt;img src=&quot;http://localhost:4000/images/posts/SharePoint-Popups/SolutionStructure.JPG&quot; alt=&quot;Solution Structure&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p class=&quot;pull-right&quot;&gt;&lt;a href=&quot;/images/posts/SharePoint-Popups/SolutionStructure.jpg&quot;&gt;&lt;img src=&quot;/images/posts/SharePoint-Popups/SolutionStructure.jpg&quot; alt=&quot;Solution Structure&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;http://localhost:4000/images/posts/SharePoint-Popups/Webpart.JPG&quot;&gt;&lt;img src=&quot;http://localhost:4000/images/posts/SharePoint-Popups/Webpart.JPG&quot; alt=&quot;Solution Structure&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/images/posts/SharePoint-Popups/Webpart.jpg&quot;&gt;&lt;img src=&quot;/images/posts/SharePoint-Popups/Webpart.jpg&quot; alt=&quot;Solution Structure&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
 
 &lt;div class=&quot;note download&quot;&gt;
   &lt;h5&gt;Downloads&lt;/h5&gt;

@@ -17,7 +17,7 @@ In the second type, clicking on the "OK" button redirects you to a different pag
 <!--more-->
 
 The Result is something like what is shown below.  
-[![Results](/images/posts/SharePoint-Popups/Popup.JPG)](/images/posts/SharePoint-Popups/Popup.JPG)  
+[![Results](/images/posts/SharePoint-Popups/Popup.jpg)](/images/posts/SharePoint-Popups/Popup.jpg)  
 
 <div class="note tip">
   <h5>Tip</h5>
@@ -32,10 +32,10 @@ For example, consider clicking the `New Document` button in a Document Library; 
 _http://howcanidoit.fourthcoffee.dev_**/_layouts/15/Upload.aspx?List={4B9CFE85-543E-4B64-9D12-CF7ADA634B16}&RootFolder=&IsDlg=1**  
 
 The upload page is as follows  
-[![Upload Page](/images/posts/SharePoint-Popups/Upload_Normal.JPG)](/images/posts/SharePoint-Popups/Upload_Normal.JPG)  
+[![Upload Page](/images/posts/SharePoint-Popups/Upload_Normal.jpg)](/images/posts/SharePoint-Popups/Upload_Normal.jpg)  
 
 And opening the url gives us this page  
-[![Upload Page Link](/images/posts/SharePoint-Popups/Upload_AppPage_IsDlg.JPG)](/images/posts/SharePoint-Popups/Upload_AppPage_IsDlg.JPG)  
+[![Upload Page Link](/images/posts/SharePoint-Popups/Upload_AppPage_IsDlg.jpg)](/images/posts/SharePoint-Popups/Upload_AppPage_IsDlg.jpg)  
 
 Similarly Check-In calls the page  
 _http://howcanidoit.fourthcoffee.dev_**/_layouts/15/checkin.aspx?List={4B9CFE85-543E-4B64-9D12-CF7ADA634B16}&FileName=%2FDocuments%2FRandom%20Document%2Edocx&IsDlg=1**  
@@ -49,9 +49,9 @@ The JavaScript APIs to display the dialog box are present in **`SP.UI.Dialog.Js`
 <div class="note info">
   <h5>Note</h5>
   <p>The corresponding images for Check-in is available in the following links <br/>
-    <a href="{{ site.url }}/images/posts/SharePoint-Popups/Checkin_Normal.JPG" alt="Alternate">CheckIn Page</a><br/>
-    <a href="{{ site.url }}/images/posts/SharePoint-Popups/Checkin_AppPage_IsDlg.JPG">CheckIn Page Url</a><br/>
-    <a href="{{ site.url }}/images/posts/SharePoint-Popups/Checkin_AppPage.JPG">CheckIn Page url without IsDlg</a><br/>
+    <a href="/images/posts/SharePoint-Popups/Checkin_Normal.jpg" alt="Alternate">CheckIn Page</a><br/>
+    <a href="/images/posts/SharePoint-Popups/Checkin_AppPage_IsDlg.jpg">CheckIn Page Url</a><br/>
+    <a href="/images/posts/SharePoint-Popups/Checkin_AppPage.jpg">CheckIn Page url without IsDlg</a><br/>
   </p>
 </div>
 
@@ -60,7 +60,7 @@ You would have noticed that opening the url gave a basic page and does not look 
 The `IsDlg=1` parameter in the query indicate to SharePoint that the application page is intended to be displayed inside a dialog box. This causes SharePoint to display only the content of the page and hide the SharePoint chrome (Header / footer etc).  
 
 So opening the Upload Url without the `IsDlg=1` parameter gives the following page  
-[![Upload Page without IsDlg]({{ site.url }}/images/posts/SharePoint-Popups/Upload_AppPage.JPG)]({{ site.url }}/images/posts/SharePoint-Popups/Upload_AppPage.JPG)  
+[![Upload Page without IsDlg](/images/posts/SharePoint-Popups/Upload_AppPage.jpg)](/images/posts/SharePoint-Popups/Upload_AppPage.jpg)  
 That looks like a normal application page.  
 The Url used was
 _http://howcanidoit.fourthcoffee.dev_**/_layouts/15/Upload.aspx?List={4B9CFE85-543E-4B64-9D12-CF7ADA634B16}&RootFolder=**  
@@ -356,10 +356,10 @@ Page.ClientScript.RegisterStartupScript(typeof (Page), "Popout Script",
 The solution structure and the webpart is shown below.  
 Once the solution is deployed, the webpart can be found in the WebParts Gallery under the `HowCanIDoIt` category.
 
-[![Solution Structure]({{ site.url }}/images/posts/SharePoint-Popups/SolutionStructure.JPG)]({{ site.url }}/images/posts/SharePoint-Popups/SolutionStructure.JPG)  
+[![Solution Structure](/images/posts/SharePoint-Popups/SolutionStructure.jpg)](/images/posts/SharePoint-Popups/SolutionStructure.jpg)  
 {: .pull-right}
 
-[![Solution Structure]({{ site.url }}/images/posts/SharePoint-Popups/Webpart.JPG)]({{ site.url }}/images/posts/SharePoint-Popups/Webpart.JPG)  
+[![Solution Structure](/images/posts/SharePoint-Popups/Webpart.jpg)](/images/posts/SharePoint-Popups/Webpart.jpg)  
 
 <div class="note download">
   <h5>Downloads</h5>
