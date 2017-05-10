@@ -4,7 +4,7 @@ title:  "Show Dialog box programmatically in SharePoint 2013"
 date:   2017-05-01
 author: ebby
 comments: true
-banner_image: /SharePoint-Popups/AllPopups.jpg
+banner_image: SharePoint-Popups/AllPopups.jpg
 tags: [SharePoint, SharePoint 2013, C#, JavaScript]
 ---
 ## What are we trying to achieve
@@ -17,7 +17,7 @@ In the second type, clicking on the "OK" button redirects you to a different pag
 <!--more-->
 
 The Result is something like what is shown below.  
-[![Results]({{ site.url }}/images/posts/SharePoint-Popups/Popup.JPG)]({{ site.url }}/images/posts/SharePoint-Popups/Popup.JPG)  
+[![Results](/images/posts/SharePoint-Popups/Popup.JPG)](/images/posts/SharePoint-Popups/Popup.JPG)  
 
 <div class="note tip">
   <h5>Tip</h5>
@@ -32,10 +32,10 @@ For example, consider clicking the `New Document` button in a Document Library; 
 _http://howcanidoit.fourthcoffee.dev_**/_layouts/15/Upload.aspx?List={4B9CFE85-543E-4B64-9D12-CF7ADA634B16}&RootFolder=&IsDlg=1**  
 
 The upload page is as follows  
-[![Upload Page]({{ site.url }}/images/posts/SharePoint-Popups/Upload_Normal.JPG)]({{ site.url }}/images/posts/SharePoint-Popups/Upload_Normal.JPG)  
+[![Upload Page](/images/posts/SharePoint-Popups/Upload_Normal.JPG)](/images/posts/SharePoint-Popups/Upload_Normal.JPG)  
 
 And opening the url gives us this page  
-[![Upload Page Link]({{ site.url }}/images/posts/SharePoint-Popups/Upload_AppPage_IsDlg.JPG)]({{ site.url }}/images/posts/SharePoint-Popups/Upload_AppPage_IsDlg.JPG)  
+[![Upload Page Link](/images/posts/SharePoint-Popups/Upload_AppPage_IsDlg.JPG)](/images/posts/SharePoint-Popups/Upload_AppPage_IsDlg.JPG)  
 
 Similarly Check-In calls the page  
 _http://howcanidoit.fourthcoffee.dev_**/_layouts/15/checkin.aspx?List={4B9CFE85-543E-4B64-9D12-CF7ADA634B16}&FileName=%2FDocuments%2FRandom%20Document%2Edocx&IsDlg=1**  
